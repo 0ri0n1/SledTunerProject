@@ -1,0 +1,137 @@
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{B3530DE0-D2F9-489C-9A6B-F38742F41FC9}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <AssemblyName>ConsoleApplication</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>SledTunerProject</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\MelonLoader\net35\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\Sledders_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="MelonLoader">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\MelonLoader\net35\MelonLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\Sledders_Data\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\Sledders_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\Sledders_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\Sledders_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\Sledders_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\Sledders_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\Sledders_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>F:\SteamLibrary\steamapps\common\Sledders\Sledders_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".filenesting.json" />
+    <None Include=".vs\ProjectEvaluation\sledtuner.metadata.v9.bin" />
+    <None Include=".vs\ProjectEvaluation\sledtuner.projects.v9.bin" />
+    <None Include=".vs\ProjectEvaluation\sledtuner.strings.v9.bin" />
+    <None Include=".vs\SledTuner\CopilotIndices\17.12.53.23981\CodeChunks.db" />
+    <None Include=".vs\SledTuner\CopilotIndices\17.12.53.23981\SemanticSymbols.db" />
+    <None Include=".vs\SledTuner\CopilotIndices\17.12.53.23981\SemanticSymbols.db-shm" />
+    <None Include=".vs\SledTuner\CopilotIndices\17.12.53.23981\SemanticSymbols.db-wal" />
+    <None Include=".vs\SledTuner\FileContentIndex\659230bf-4c0c-4161-90ce-654a764eb23a.vsidx" />
+    <None Include=".vs\SledTuner\FileContentIndex\e02ec350-8d1b-4457-8a55-73734cba948d.vsidx" />
+    <None Include=".vs\SledTuner\FileContentIndex\f7e3fdc1-c95d-4701-91c3-b7c005d2d9a6.vsidx" />
+    <None Include=".vs\SledTuner\v17\.futdcache.v2" />
+    <None Include=".vs\SledTuner\v17\.suo" />
+    <None Include=".vs\SledTuner\v17\DocumentLayout.backup.json" />
+    <None Include=".vs\SledTuner\v17\DocumentLayout.json" />
+    <None Include=".vs\slnx.sqlite" />
+    <None Include=".vs\VSWorkspaceState.json" />
+    <None Include="app.config" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Config System\ConfigManager\ConfigManager.cs" />
+    <Compile Include="Config System\ErrorHandler\ErrorHandler.cs" />
+    <Compile Include="Config System\LoggingManager\LoggingManager.cs" />
+    <Compile Include="Game Integration System\GameObjectManager\GameObjectManager.cs" />
+    <Compile Include="GUI System\FileSelectionPanel\FileSelectionPanel.cs" />
+    <Compile Include="GUI System\GUIManager\GUIManager.cs" />
+    <Compile Include="GUI System\JSONEditorPanel\JSONEditorPanel.cs" />
+    <Compile Include="GUI System\MenuBarManager\MenuBarManager.cs" />
+    <Compile Include="GUI System\ParameterEditor\ParameterEditor.cs" />
+    <Compile Include="GUI System\PresetManager\GUIPresetManager.cs" />
+    <Compile Include="GUI System\SearchManager\SearchManager.cs" />
+    <Compile Include="GUI System\TabPanelManager\TabPanelManager.cs" />
+    <Compile Include="GUI System\UtilityControls\UtilityControls.cs" />
+    <Compile Include="GUI System\ValidationManager\ValidationManager.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sled Parameter System\EventDispatcher\EventDispatcher.cs" />
+    <Compile Include="Sled Parameter System\ParameterLoader\ParameterLoader.cs" />
+    <Compile Include="Sled Parameter System\ParameterStore\ParameterStore.cs" />
+    <Compile Include="Sled Parameter System\ParameterUpdater\ParameterUpdater.cs" />
+    <Compile Include="Sled Parameter System\ParameterValidator\ParameterValidator.cs" />
+    <Compile Include="Sled Parameter System\PresetManager\ParameterPresetManager.cs" />
+    <Compile Include="Sled Parameter System\SledParameterManager\SledParameterManager.cs" />
+    <Compile Include="Sled Parameter System\UndoRedoManager\UndoRedoManager.cs" />
+    <Compile Include="Utility System\ErrorHandler\ErrorHandler.cs" />
+    <Compile Include="Utility System\LoggingManager\LoggingManager.cs" />
+    <Compile Include="Utility System\Utilities\Utilities.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include=".vs\SledTunerProject\v17\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
+  <ProjectExtensions>
+    <VisualStudio AllowExistingFolder="true" />
+  </ProjectExtensions>
+</Project>
