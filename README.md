@@ -129,7 +129,7 @@
     <ol>
       <li><strong>Requirements</strong>: Unity 2019+, .NET 4.7.2, C# 7.3, MelonLoader (optional).</li>
       <li><strong>Clone/Download</strong>: 
-        <pre>git clone https://github.com/YourName/SledTunerProject.git</pre>
+        <pre>git clone https://github.com/0ri0n1/SledTunerProject.git</pre>
       </li>
       <li><strong>Open the Project</strong>: 
         If it's a Unity project, open via Unity Hub. Otherwise, open <code>SledTuner.csproj</code> in an IDE. 
