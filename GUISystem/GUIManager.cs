@@ -36,9 +36,12 @@ namespace SledTunerProject.GUISystem
         // Optional alpha for the window's GUI
         private float _opacity = 1f;
 
-        // Styles for top-bar buttons
+        // Styles for top-bar buttons and title
         private GUIStyle _titleBarButtonStyle;
-        private GUIStyle _headerStyle; // if you want a style for the window title
+        private GUIStyle _headerStyle;
+
+        // NEW: style for removing default IMGUI window padding at the top
+        private GUIStyle _customWindowStyle;
 
         public GUIManager(SledParameterManager spm, ConfigManager cfg)
         {
@@ -50,7 +53,7 @@ namespace SledTunerProject.GUISystem
             _simplePanel = new SimpleTunerPanel(_sledParamManager);
             _advancedPanel = new AdvancedTunerPanel(_sledParamManager, _configManager);
 
-            // Default window rect (large example)
+            // Default window rect
             _windowRect = new Rect(
                 Screen.width * 0.2f,
                 Screen.height * 0.2f,
@@ -61,15 +64,11 @@ namespace SledTunerProject.GUISystem
             MelonLogger.Msg("[GUIManager] Created with 3 sub-panels (MenuBar, Simple, Advanced).");
         }
 
-        /// <summary>
-        /// Toggles the entire menu on/off. Hook to F2 in your mod.
-        /// </summary>
         public void ToggleMenu()
         {
             _menuOpen = !_menuOpen;
             if (_menuOpen)
             {
-                // Refresh advanced fields so reflection data is up to date
                 _advancedPanel.RePopulateFields();
                 MelonLogger.Msg("[GUIManager] Menu opened (advanced fields repopulated).");
             }
@@ -78,6 +77,7 @@ namespace SledTunerProject.GUISystem
                 MelonLogger.Msg("[GUIManager] Menu closed.");
             }
         }
+
         /// <summary>
         /// Draws a horizontal slider for adjusting the overall GUI opacity,
         /// plus a percentage label for feedback.
@@ -87,11 +87,9 @@ namespace SledTunerProject.GUISystem
             GUILayout.BeginHorizontal();
             GUILayout.Label("Opacity:", GUILayout.Width(60));
 
-            // The slider goes from 0.1 (mostly transparent) to 1.0 (fully opaque).
             float newVal = GUILayout.HorizontalSlider(_opacity, 0.1f, 1.0f, GUILayout.Width(150));
             _opacity = newVal;
 
-            // Display current opacity % next to the slider.
             GUILayout.Label($"{(_opacity * 100f):F0}%", GUILayout.Width(40));
             GUILayout.EndHorizontal();
         }
@@ -102,27 +100,29 @@ namespace SledTunerProject.GUISystem
         /// </summary>
         public void DrawMenu()
         {
+            // If the menu is toggled off, do nothing
             if (!_menuOpen) return;
 
-            // Setup alpha blending
+            // Set overall alpha for the entire window
             var prevColor = GUI.color;
             GUI.color = new Color(prevColor.r, prevColor.g, prevColor.b, _opacity);
 
-            // Draw the main window
+            // Use the built-in window style again
             _windowRect = GUILayout.Window(
-                1001,
-                _windowRect,
-                WindowFunction,
-                "",                // We'll manually draw a title bar
-                GUI.skin.window
+                1001,                 // unique window ID
+                _windowRect,          // current rect
+                WindowFunction,       // callback
+                "",                   // empty title (we draw a custom title bar ourselves)
+                GUI.skin.window       // <-- the default built-in style
             );
 
-            // Restore color
+            // Restore GUI color
             GUI.color = prevColor;
 
-            // Handle edge-based resizing
+            // Allow resizing from corners
             HandleResize();
         }
+
 
         /// <summary>
         /// The main IMGUI window function. Lays out the "title bar" row
@@ -131,10 +131,7 @@ namespace SledTunerProject.GUISystem
         /// </summary>
         private void WindowFunction(int windowID)
         {
-            // Initialize or update styles if needed
-            InitStyles();
-
-            // If no sled is found, show "retry" logic
+            // If not initialized, show "retry" logic (unchanged)
             if (!_sledParamManager.IsInitialized)
             {
                 GUILayout.Label("<color=red>No sled found. Wait for spawn or click 'Retry'.</color>");
@@ -143,22 +140,19 @@ namespace SledTunerProject.GUISystem
                     _sledParamManager.InitializeComponents();
                     _advancedPanel.RePopulateFields();
                 }
-                // Make window draggable
                 GUI.DragWindow(new Rect(0, 0, 10000, 20));
                 return;
             }
 
-            // === 1) Draw the custom title bar (with minimize, maximize, close) ===
+            // 1) Custom title bar, etc.
             DrawCustomTitleBar();
-
             GUILayout.Space(5);
 
-            // === 2) Draw the top MenuBar (Load, Save, Reset, etc.) ===
+            // 2) Top MenuBar
             _menuBar.DrawMenuBar();
-
             GUILayout.Space(5);
 
-            // === 3) Simple/Advanced Toggle row ===
+            // 3) Simple/Advanced toggle
             GUILayout.BeginHorizontal();
             GUILayout.Label("View Mode:", GUILayout.Width(80));
             bool newShowAdv = GUILayout.Toggle(_showAdvanced, "Advanced");
@@ -171,7 +165,7 @@ namespace SledTunerProject.GUISystem
 
             GUILayout.Space(5);
 
-            // === 4) Show the correct panel ===
+            // 4) Show the chosen panel
             if (_showAdvanced)
             {
                 _advancedPanel.DrawAdvancedPanel();
@@ -181,38 +175,45 @@ namespace SledTunerProject.GUISystem
                 _simplePanel.DrawSimplePanel();
             }
 
-            // === 5) Draggable area at the top
+            // 5) Now push everything else up, so the slider is "at the bottom"
+            GUILayout.FlexibleSpace();  // This reserves flexible vertical space above the slider
+
+            // 6) Center the slider horizontally
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();     // push from left
+            DrawOpacitySlider();           // your existing method
+            GUILayout.FlexibleSpace();     // push from right
+            GUILayout.EndHorizontal();
+
+            // 7) A bit of extra spacing below, if you like
+            GUILayout.Space(10);
+
+            // 8) Make top area draggable
             GUI.DragWindow(new Rect(0, 0, 10000, 20));
         }
 
         /// <summary>
-        /// Draws a custom "title bar" row with Sled Tuner label on the left
+        /// Draws a custom "title bar" row with "Sled Tuner" text on the left
         /// and the _ [ ] X buttons on the right.
         /// </summary>
         private void DrawCustomTitleBar()
         {
             GUILayout.BeginHorizontal();
 
-            // Title text
             GUILayout.Label("Sled Tuner", _headerStyle, GUILayout.ExpandWidth(false));
-
-            // Push the window buttons to the far right
             GUILayout.FlexibleSpace();
 
-            // Minimize
             if (GUILayout.Button("_", _titleBarButtonStyle, GUILayout.Width(25)))
             {
                 MinimizeWindow();
             }
-            // Maximize
             if (GUILayout.Button("[ ]", _titleBarButtonStyle, GUILayout.Width(25)))
             {
                 MaximizeWindow();
             }
-            // Close
             if (GUILayout.Button("X", _titleBarButtonStyle, GUILayout.Width(25)))
             {
-                ToggleMenu(); // or CloseWindow() if you have that method
+                ToggleMenu();
             }
 
             GUILayout.EndHorizontal();
@@ -220,7 +221,6 @@ namespace SledTunerProject.GUISystem
 
         /// <summary>
         /// Initializes or updates the custom styles if not set. 
-        /// Called at the start of WindowFunction.
         /// </summary>
         private void InitStyles()
         {
@@ -243,31 +243,34 @@ namespace SledTunerProject.GUISystem
                     fontSize = 16,
                     fontStyle = FontStyle.Bold,
                     normal = { textColor = Color.white },
-                    // or any additional styling you want
+                };
+            }
+
+            // NEW: define our custom window style with zero top padding
+            if (_customWindowStyle == null)
+            {
+                _customWindowStyle = new GUIStyle(GUI.skin.window)
+                {
+                    padding = new RectOffset(0, 0, 0, 0),
+                    border = new RectOffset(2, 2, 2, 2)
                 };
             }
         }
 
         #region Resizing/Minimize Logic
 
-        /// <summary>
-        /// Allows the user to resize the window from the bottom-right corner.
-        /// </summary>
         private void HandleResize()
         {
-            // We'll only do logic on relevant event types to avoid overhead
             if (Event.current.type != EventType.Repaint
                 && Event.current.type != EventType.MouseDown
                 && Event.current.type != EventType.MouseUp
                 && Event.current.type != EventType.MouseDrag)
                 return;
 
-            // Basic approach: check if mouse is near the bottom-right corner
             Vector2 mousePos = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
             bool nearRight = Mathf.Abs(mousePos.x - _windowRect.xMax) < 10f;
             bool nearBottom = Mathf.Abs(mousePos.y - _windowRect.yMax) < 10f;
 
-            // Start resizing
             if (Event.current.type == EventType.MouseDown && (nearRight || nearBottom))
             {
                 _isResizing = true;
@@ -276,7 +279,6 @@ namespace SledTunerProject.GUISystem
                 Event.current.Use();
             }
 
-            // Continue resizing
             if (_isResizing && (Event.current.type == EventType.MouseDrag
                              || Event.current.type == EventType.MouseMove))
             {
@@ -300,7 +302,6 @@ namespace SledTunerProject.GUISystem
                 Event.current.Use();
             }
 
-            // Stop resizing
             if (_isResizing && Event.current.type == EventType.MouseUp)
             {
                 _isResizing = false;
@@ -308,28 +309,19 @@ namespace SledTunerProject.GUISystem
             }
         }
 
-        /// <summary>
-        /// Minimizes the window by storing the old size and forcing a small rect.
-        /// </summary>
         private void MinimizeWindow()
         {
             if (!_isMinimized)
             {
                 _prevWindowRect = _windowRect;
-                // Force a small bar in the corner
                 _windowRect = new Rect(Screen.width - 200f, 0f, 200f, 30f);
                 _isMinimized = true;
                 MelonLogger.Msg("[GUIManager] Window minimized.");
             }
         }
 
-        /// <summary>
-        /// Maximize toggles between restored and full-screen if not minimized,
-        /// or we restore from the minimized rect if currently minimized.
-        /// </summary>
         private void MaximizeWindow()
         {
-            // If currently minimized, restore old rect
             if (_isMinimized)
             {
                 _windowRect = _prevWindowRect;
@@ -338,7 +330,6 @@ namespace SledTunerProject.GUISystem
             }
             else
             {
-                // Force fullscreen
                 _prevWindowRect = _windowRect;
                 _windowRect = new Rect(0f, 0f, Screen.width, Screen.height);
                 MelonLogger.Msg("[GUIManager] Window maximized to full screen.");

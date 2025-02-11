@@ -270,7 +270,7 @@ namespace SledTunerProject.SledParameterSystem
             var controller = _snowmobileBody.GetComponent("SnowmobileController");
             if (controller == null)
             {
-                MelonLogger.Warning("[SledParamMgr] SnowmobileController not found on Body.");
+                MelonLogger.Warning("[SledParameterManager] SnowmobileController not found on Body.");
                 return null;
             }
 
@@ -288,7 +288,7 @@ namespace SledTunerProject.SledParameterSystem
             }
             catch (Exception ex)
             {
-                MelonLogger.Warning("[SledParamMgr] Error reading sled name: " + ex.Message);
+                MelonLogger.Warning("[SledParameterManager] Error reading sled name: " + ex.Message);
                 return null;
             }
         }
